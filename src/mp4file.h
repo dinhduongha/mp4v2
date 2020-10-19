@@ -76,6 +76,7 @@ public:
 
     void Create( const char* fileName,
                  uint32_t    flags,
+                 const MP4FileProvider* provider = NULL,
                  int         add_ftyp = 1,
                  int         add_iods = 1,
                  char*       majorBrand = NULL,

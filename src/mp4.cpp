@@ -160,6 +160,29 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
                                char** supportedBrands,
                                uint32_t supportedBrandsCount)
     {
+        return MP4CreateProviderEx(fileName, flags, NULL,
+                                   add_ftyp, add_iods,
+                                   majorBrand, minorVersion,
+                                   supportedBrands, supportedBrandsCount);
+    }
+
+    MP4FileHandle MP4CreateProvider (const char* fileName,
+                                     uint32_t flags,
+                                     const MP4FileProvider* fileProvider)
+    {
+        return MP4CreateProviderEx(fileName, flags, fileProvider);
+    }
+
+    MP4FileHandle MP4CreateProviderEx (const char* fileName,
+                                       uint32_t flags,
+                                       const MP4FileProvider* fileProvider,
+                                       int add_ftyp,
+                                       int add_iods,
+                                       char* majorBrand,
+                                       uint32_t minorVersion,
+                                       char** supportedBrands,
+                                       uint32_t supportedBrandsCount)
+    {
         if (!fileName)
             return MP4_INVALID_FILE_HANDLE;
 
@@ -170,7 +193,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         try {
             ASSERT(pFile);
             // LATER useExtensibleFormat, moov first, then mvex's
-            pFile->Create(fileName, flags, add_ftyp, add_iods,
+            pFile->Create(fileName, flags, fileProvider, add_ftyp, add_iods,
                           majorBrand, minorVersion,
                           supportedBrands, supportedBrandsCount);
             return (MP4FileHandle)pFile;
@@ -870,7 +893,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         }
 
         catch (...) {
-            return MP4_INVALID_TRACK_ID;
+            return (mp4v2_ismacrypParams *)MP4_INVALID_TRACK_ID;
         }
     }
 
